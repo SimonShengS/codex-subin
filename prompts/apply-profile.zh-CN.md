@@ -12,7 +12,8 @@
 - 逐字段比较七个目标 Agent TOML。保留无关 Agent 和无关配置，除非它们与所选 Profile 冲突。
 - 对任何实质冲突、不支持字段、账号/模型可用性问题或生效指令冲突，先展示再修改受影响项目。
 - Root/Plan 的 Session Defaults 与 subagent Profile 分开。只有我明确授权时，才应用 examples/session-defaults.toml。
-- 当 multi-agent v2 运行时自行管理并发时，不要加入旧的 agents.max_threads 或 depth 限制。
+- 显式子 Agent 线程上限使用 `agents.max_concurrent_threads_per_session`；不要加入旧的 `agents.max_threads` 别名或不受支持的 `agents.max_depth`。
+- 应用 Subin 层级规则时，允许第一层子 Agent 无需 Root 单独授权即可再委派独立有界工作；要求每个嵌套子节点被明确标记为不得继续委派的叶子，并把最大逻辑结构限制为 Root -> subagent -> leaf。
 - 不得根据文件存在、文件名、task name、task path、预期映射或子 Agent 自述推断运行时激活。
 - 不安装额外插件、工具或验证框架。
 

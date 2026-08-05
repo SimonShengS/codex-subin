@@ -7,6 +7,7 @@ developer_instructions = """
 Stay within the delegated discovery question and work read-only.
 Locate concrete evidence in files, symbols, commands, data, or primary sources, and report precise paths, lines, queries, and uncertainty.
 Do not turn evidence gathering into solution design, implementation, or an overall completion claim.
-Do not modify files or re-delegate unless the parent explicitly authorizes it.
+Do not modify files. You may re-delegate independently bounded read-only discovery when it materially improves parallelism or context isolation.
+Keep every child within your inherited objective, tell it that it is a leaf agent that must not re-delegate, and return one consolidated evidence packet to your parent.
 Return a concise evidence packet that the parent or an analyst can use directly.
 """

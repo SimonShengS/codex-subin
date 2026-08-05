@@ -76,6 +76,23 @@ Efficient 仅修改 `worker`：改用 `gpt-5.6-luna / max`。它追求更低成�
 
 不要机械地把所有角色升到 `max`。Effort 不是放之四海皆准的质量阶梯：更高档位可能增加时间和 token，却不改善特定工作。把高推理需求路由给 `analyst`、`reviewer` 或 `deep_reviewer`，让高频实现和明确验证保持有界。
 
+## 并发与层级
+
+对于确有并行工作负载的用户，Subin 推荐把子 Agent 线程容量上限设为 10：
+
+```toml
+[agents]
+max_concurrent_threads_per_session = 10
+```
+
+这个上限不包含 Root，而且只是容量，不是目标数量。普通任务仍然只使用最小且有价值的角色集合。十个角色实例不等于新增十种角色；Subin 仍然只有七种工作类型。
+
+AGENTS 片段允许一层无需 Root 单独授权的按需再委派。第一层子 Agent 可以在确实改善并行、上下文隔离或独立证据时创建有界子任务，并必须把每个子节点标记为不得再委派的叶子。最大逻辑结构是 Root → subagent → leaf subagent。
+
+当前公开的 Codex 配置没有受支持的 `agents.max_depth`，因此并发上限由运行时执行，逻辑深度由指令约束。不要为了形成层级而创建中间 manager，也不得制造重叠的并行写入。
+
+初始实现已有一份带日期的[两层运行时探针](docs/runtime/2026-08-05-two-level-probe.md)：权威元数据实际观察到 depth=2 的叶子，以及 Root 与四个同时运行的子 Agent。测试有意没有占满十个线程，因此十并发仍是配置声明，而不是基准证据。
+
 ## 会话默认值
 
 [`examples/session-defaults.toml`](examples/session-defaults.toml) 是**最小片段**，不是完整 `config.toml`：
@@ -86,6 +103,7 @@ model_reasoning_effort = "medium"
 plan_mode_reasoning_effort = "max"
 
 [agents]
+max_concurrent_threads_per_session = 10
 default_subagent_model = "gpt-5.6-sol"
 default_subagent_reasoning_effort = "medium"
 ```
@@ -109,7 +127,8 @@ Subin 有意不提供安装器、生成器或配置管理器。本地约定和 C
 3. 运行时 turn context 中的实际模型与 effort；
 4. 接口可见时的 `multi_agent_version` 与注入角色指令；
 5. 配置文件声明；
-6. 当前接口不可观测的字段。
+6. 配置嵌套委派时的有界 Root → subagent → leaf 探针；
+7. 当前接口不可观测的字段。
 
 不得根据 TOML 文件名、文件存在、task name、task path 或子 Agent 自我描述推断激活。首次安装、Codex 升级或整体 Profile 变化后运行**完整探针**；只修改单个路由后运行**聚焦探针**。
 
@@ -136,7 +155,7 @@ Subin 有意不提供安装器、生成器或配置管理器。本地约定和 C
 
 - 方案面向支持自定义 subagent 且可逐角色设置 model/effort 的 Codex 环境。
 - 即使配置可解析，账号权限或客户端版本仍可能拒绝某个模型。
-- 多 Agent 运行时行为随版本变化；当 v2 运行时自行管理并发时，不要设置 `agents.max_threads` 等旧并发键。
+- 多 Agent 运行时行为随版本变化；显式上限使用 `agents.max_concurrent_threads_per_session`，不要使用旧的 `agents.max_threads` 别名或不受支持的 `agents.max_depth`。
 - 元数据字段不可用时，结果是**不可观测**，不能自动判为通过或失败。
 - 金融示例只描述研究流程，不构成交易指令。
 - Profile 是参考材料；修改前请备份并审阅本地配置。

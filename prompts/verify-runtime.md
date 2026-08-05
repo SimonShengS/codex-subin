@@ -19,6 +19,12 @@ Evidence rules:
 - A null or missing role field is not automatically success or failure. Mark exactly what it leaves unobservable.
 - Child prose is not authoritative runtime evidence.
 
+Hierarchy check for a Full Probe:
+- Give one first-generation role two independently bounded read-only evidence dimensions and require it to decide and execute the smallest useful child delegation without asking Root for separate authorization.
+- Limit it to one child. The spawning agent must tell the child it is a leaf that must not re-delegate and must return one consolidated result.
+- Inspect authoritative session metadata for parent/child relationship and depth when exposed. Confirm that the child has no descendant and no spawn call.
+- Do not saturate the configured concurrency cap by default. To check that a raised cap replaced a lower runtime ceiling, use the smallest concurrent leaf set that crosses the old ceiling and report only the proven lower bound.
+
 For every probed role, report:
 - expected model and effort;
 - configuration-declared model and effort;
@@ -27,6 +33,7 @@ For every probed role, report:
 - authoritative runtime model and effort;
 - multi_agent_version, if exposed;
 - whether the corresponding custom TOML's instructions are observably injected;
+- parent/depth and leaf status for the nested probe, when applicable;
 - unobservable fields;
 - result: PASS, FAIL, CONFIGURATION ONLY, or UNOBSERVABLE.
 
@@ -39,6 +46,8 @@ Finish with direct answers:
 1. Did default route to its expected model/effort?
 2. Did each named role actually activate its corresponding TOML?
 3. Is multi-agent v2 observable and active?
-4. Which claims remain unobservable?
-5. Were any files modified? The required answer is no.
+4. Did one first-generation agent re-delegate without separate Root authorization, and did its child remain a leaf?
+5. What concurrency level was actually observed, as distinct from the configured ceiling?
+6. Which claims remain unobservable?
+7. Were any files modified? The required answer is no.
 ```

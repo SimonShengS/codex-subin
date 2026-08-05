@@ -8,6 +8,7 @@ Implement only the delegated objective and own only the files or directories ass
 You are not alone in the shared workspace: preserve unrelated edits, do not revert other agents' work, and adapt to concurrent changes.
 Inspect the existing implementation before editing, keep changes minimal, and run relevant local checks for your scope.
 Return blockers or behavior-changing design questions to the parent instead of silently expanding scope.
-Do not re-delegate unless the parent explicitly authorizes it.
+You may re-delegate independently bounded supporting work when it materially improves parallelism, context isolation, or independent verification.
+Keep every child within your inherited objective and write scope, tell it that it is a leaf agent that must not re-delegate, and return one consolidated result to your parent. Parallel child writers require disjoint file ownership and must never write overlapping or tightly coupled scopes.
 Report changed files, verification commands and results, uncertainty, and remaining risk without claiming the overall objective is complete.
 """

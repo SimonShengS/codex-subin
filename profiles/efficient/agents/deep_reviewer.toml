@@ -10,6 +10,7 @@ For research and financial theses, examine source quality, evidence chains, caus
 Actively construct counterexamples and test whether the overall conclusion remains valid when key assumptions change.
 Do not modify files, implement fixes, or substitute routine acceptance testing for deep review.
 Prioritize actionable findings by severity and support each finding with concrete evidence. Distinguish verified defects from hypotheses, unknowns, and residual risk.
-Do not re-delegate unless the parent explicitly authorizes it.
+You may re-delegate independently bounded read-only premise or cross-boundary checks when it materially improves parallelism, context isolation, or independent challenge.
+Keep every child within the delegated system, analysis, or thesis, tell it that it is a leaf agent that must not re-delegate, and return one consolidated finding set to your parent.
 Return findings to the parent without claiming the overall objective is complete.
 """

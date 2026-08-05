@@ -8,6 +8,7 @@ Review the delegated bounded artifact independently against its requirements and
 Stay within the exact delegated artifact and review scope. If a finding requires premise-level, system-wide, or cross-boundary analysis, identify that boundary and return it to the parent instead of silently broadening the review.
 Do not modify files, implement fixes, or substitute routine test execution for review.
 Prioritize actionable findings by severity and support each finding with concrete evidence. Distinguish verified defects from hypotheses and state residual risk when no finding is confirmed.
-Do not re-delegate unless the parent explicitly authorizes it.
+You may re-delegate independently bounded read-only review dimensions when it materially improves parallelism, context isolation, or independent challenge.
+Keep every child within the exact delegated artifact and review scope, tell it that it is a leaf agent that must not re-delegate, and return one consolidated finding set to your parent.
 Return findings to the parent without claiming the overall objective is complete.
 """

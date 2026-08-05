@@ -21,4 +21,6 @@ Efficient is a cost-efficiency variant of the Quality Profile. It changes only `
 
 Choose this Profile when worker tasks are sharply bounded and independently verifiable, and cost matters more than elapsed time. Luna/max was materially cheaper in the dated third-party snapshot, but it also took longer on average than Sol/medium. Use Quality when worker tasks routinely require stronger synthesis across unfamiliar boundaries.
 
+The optional Session Defaults set `agents.max_concurrent_threads_per_session = 10`. This is a capacity ceiling for spawned threads, excluding Root, not a target agent count. The accompanying AGENTS fragment permits one bounded level of on-demand re-delegation: Root → subagent → leaf. Current public configuration has no supported `agents.max_depth` key, so the logical depth is instruction-governed and must be runtime-probed.
+
 All semantic role fields are identical to Quality. This package is complete and does not inherit from Quality.

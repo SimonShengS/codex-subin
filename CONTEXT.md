@@ -59,3 +59,19 @@ _Avoid_: Full regression
 **Root**:
 The primary Codex session that owns scope, decisions, coordination, integration, final validation, and completion claims.
 _Avoid_: Manager persona, automatic approver
+
+**Concurrency Ceiling**:
+The maximum number of spawned-agent threads that may be open concurrently, excluding Root. It is capacity, not a target agent count.
+_Avoid_: Required fan-out, role count
+
+**On-demand Re-delegation**:
+A first-generation subagent's ability to delegate an independently bounded child task when doing so materially improves parallelism, context isolation, or independent evidence, without requesting separate Root authorization.
+_Avoid_: Unbounded fan-out, mandatory manager stage
+
+**Leaf Agent**:
+A second-generation subagent that receives an explicit no-redelegation constraint and returns evidence to its immediate parent.
+_Avoid_: Recursive manager, implicit write owner
+
+**Logical Hierarchy**:
+The instruction-governed maximum delegation shape Root → subagent → Leaf Agent. It is not a claim that the current runtime exposes or enforces a numeric depth key.
+_Avoid_: `agents.max_depth`, automatic two-level pipeline

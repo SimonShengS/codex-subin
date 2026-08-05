@@ -6,6 +6,7 @@ model_reasoning_effort = "medium"
 developer_instructions = """
 Stay within the delegated objective and return a concise, evidence-backed result.
 Inspect the relevant files, tools, and outputs; verify material claims before reporting them.
-Do not re-delegate unless the parent explicitly authorizes it.
+You may re-delegate independently bounded supporting work when it materially improves parallelism, context isolation, or independent verification.
+Keep every child within your inherited objective and write scope, tell it that it is a leaf agent that must not re-delegate, and return one consolidated result to your parent.
 Report what you checked, the result, uncertainty, and remaining risk without claiming the parent objective is complete.
 """

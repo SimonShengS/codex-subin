@@ -76,6 +76,23 @@ Start with Quality when correctness and effect matter more than token cost, espe
 
 Do not mechanically raise every role to `max`. Effort is not a universal quality ladder: a higher setting may consume more time and tokens without improving a particular workload. Route high-reasoning work to `analyst`, `reviewer`, or `deep_reviewer`; keep frequent execution and explicit verification bounded.
 
+## Concurrency and hierarchy
+
+Subin recommends a high-capacity ceiling of ten spawned-agent threads for users who have parallel workloads:
+
+```toml
+[agents]
+max_concurrent_threads_per_session = 10
+```
+
+The cap excludes Root and is capacity, not a target. A normal task still uses only the smallest useful set of roles. Ten role instances do not mean ten new role types: Subin retains the same seven work types.
+
+The AGENTS fragment permits one level of on-demand re-delegation without separate Root authorization. A first-generation subagent may create independently bounded children when this materially improves parallelism, context isolation, or independent evidence; every child must be marked as a non-redelegating leaf. The resulting maximum logical hierarchy is Root → subagent → leaf subagent.
+
+Current public Codex configuration exposes no supported `agents.max_depth` setting, so concurrency is runtime-enforced while logical depth is instruction-governed. Do not introduce an intermediate manager merely to form a hierarchy, and never allow overlapping parallel writers.
+
+The initial implementation has a dated [two-level runtime probe](docs/runtime/2026-08-05-two-level-probe.md): it observed an authoritative depth-2 leaf and Root plus four simultaneously running child agents. The configured ceiling of ten was intentionally not saturated, so ten-way concurrency remains a configuration claim rather than benchmark evidence.
+
 ## Session Defaults
 
 [`examples/session-defaults.toml`](examples/session-defaults.toml) is a **minimal fragment**, not a complete `config.toml`:
@@ -86,6 +103,7 @@ model_reasoning_effort = "medium"
 plan_mode_reasoning_effort = "max"
 
 [agents]
+max_concurrent_threads_per_session = 10
 default_subagent_model = "gpt-5.6-sol"
 default_subagent_reasoning_effort = "medium"
 ```
@@ -109,7 +127,8 @@ The probe separates:
 3. actual model and effort from runtime turn context;
 4. `multi_agent_version` and injected role instructions when exposed;
 5. configuration declarations;
-6. fields the current interface cannot observe.
+6. a bounded Root → subagent → leaf probe when nested delegation is configured;
+7. fields the current interface cannot observe.
 
 Never infer activation from a TOML filename, file existence, task name, task path, or a child's self-description. Run a **Full Probe** after initial installation, a Codex upgrade, or a broad Profile change. Run a **Focused Probe** after changing one route.
 
@@ -136,7 +155,7 @@ The snapshot helps explain why this release does not choose `Sol/high`, why freq
 
 - The package targets Codex installations that expose custom subagents with per-role model and effort settings.
 - Account entitlements and client releases may reject a model even when a configuration file parses.
-- Multi-agent runtime behavior is version-dependent. Leave legacy concurrency keys such as `agents.max_threads` unset when the active v2 runtime owns concurrency.
+- Multi-agent runtime behavior is version-dependent. Use `agents.max_concurrent_threads_per_session` for an explicit cap; do not use the legacy `agents.max_threads` alias or an unsupported `agents.max_depth` key.
 - An unavailable metadata field is **unobservable**, not automatically pass or fail.
 - Financial examples concern research workflow only; Subin provides no trading instruction.
 - Profiles are reference material. Back up and review local configuration before changing it.

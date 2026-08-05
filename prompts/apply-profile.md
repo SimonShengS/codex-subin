@@ -12,7 +12,8 @@ Constraints:
 - Compare the seven target Agent TOMLs field by field. Preserve unrelated agents and unrelated configuration unless they conflict with the selected Profile.
 - Show any material conflict, unsupported field, account/model availability problem, or active instruction conflict before changing the affected item.
 - Keep Root/Plan Session Defaults separate from the subagent Profile. Apply examples/session-defaults.toml only if I explicitly authorize those optional defaults.
-- Do not introduce legacy agents.max_threads or depth limits when the active multi-agent v2 runtime owns concurrency.
+- Use `agents.max_concurrent_threads_per_session` for an explicit spawned-thread cap. Do not introduce the legacy `agents.max_threads` alias or an unsupported `agents.max_depth` key.
+- When applying the Subin hierarchy guidance, allow first-generation subagents to re-delegate independently bounded work without separate Root authorization. Require every nested child to be marked as a non-redelegating leaf and keep the maximum logical hierarchy at Root -> subagent -> leaf.
 - Do not infer runtime activation from file existence, filenames, task names, task paths, expected mappings, or child self-report.
 - Do not install extra plugins, tools, or validation frameworks.
 

@@ -2,6 +2,13 @@
 
 All notable changes to Codex Subin are documented here.
 
+## [Unreleased]
+
+- Added the modern `agents.max_concurrent_threads_per_session = 10` reference ceiling.
+- Allowed bounded first-generation subagents to re-delegate once without separate Root authorization.
+- Required nested children to remain non-redelegating leaves and documented the Root → subagent → leaf logical hierarchy.
+- Extended the bilingual Runtime Probe to distinguish configured concurrency from observed concurrency and verify authoritative depth metadata.
+
 ## [0.1.0] - 2026-08-05
 
 - Published the seven-role work-type routing model.

@@ -7,6 +7,8 @@ Codex Subin is a small reference kit. Contributions should make its decisions ea
 - Route by bounded work type, not simulated persona.
 - Keep `quality` and `efficient` as complete seven-file packages.
 - Preserve role semantics across Profiles; a Profile difference should normally be limited to `model` and `model_reasoning_effort`.
+- Keep concurrency capacity distinct from role count and observed runtime concurrency.
+- Preserve the bounded Root → subagent → leaf hierarchy: nested children are leaves, and overlapping writers remain prohibited.
 - Separate official capability claims from third-party observations and local inference.
 - Date benchmark evidence and never present a transient ranking as permanent.
 - Require runtime evidence for activation claims; file presence is configuration evidence only.

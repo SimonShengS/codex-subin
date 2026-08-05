@@ -21,6 +21,8 @@ Quality is the recommended Codex Subin Profile. It favors outcome quality while 
 
 Use a Full Runtime Probe after installation or a Codex upgrade. This package's TOMLs are configuration declarations, not proof that a route was activated.
 
+The optional Session Defaults set `agents.max_concurrent_threads_per_session = 10`. This is a capacity ceiling for spawned threads, excluding Root, not a target agent count. The accompanying AGENTS fragment permits one bounded level of on-demand re-delegation: Root → subagent → leaf. Current public configuration has no supported `agents.max_depth` key, so the logical depth is instruction-governed and must be runtime-probed.
+
 ## Why these settings
 
 - `explorer` gets Luna/max because discovery is read-heavy, independently bounded, and benefits from persistence more than premium synthesis.

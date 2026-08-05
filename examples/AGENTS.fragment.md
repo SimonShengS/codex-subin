@@ -28,12 +28,23 @@
 
 Every delegated task states the objective, authoritative inputs, frozen constraints, exact scope, write permissions and ownership, expected output, and stop conditions. Provide bounded but sufficient context. A subagent may trace needed dependencies but may not expand its objective or write scope.
 
-Use `fork_turns="none"` by default. Do not re-delegate unless the parent explicitly authorizes it.
+Use `fork_turns="none"` by default.
+
+### Hierarchy and context
+
+- Use `agents.max_concurrent_threads_per_session` when an explicit concurrency cap is desired. Do not use the legacy `agents.max_threads` alias or an unsupported `agents.max_depth` key.
+- Root and first-generation subagents may spawn children when delegation has independently bounded scope, materially improves parallelism or context isolation, or provides useful independent evidence. Re-delegation does not require separate Root authorization.
+- A spawning subagent remains within its inherited objective and write scope, tells every child that it is a leaf agent, and returns one consolidated result to its parent.
+- Leaf agents do not re-delegate. The maximum logical hierarchy is Root → subagent → leaf subagent.
+- Do not create an intermediate manager merely to form a hierarchy. Prefer direct Root-to-leaf delegation when another level adds no coordination value.
+- All open spawned-agent threads across the hierarchy count toward `agents.max_concurrent_threads_per_session`.
+- Repeated failure returns to the parent for a strategy change instead of causing deeper unbounded fan-out.
 
 ### Write ownership
 
 - Assign one write owner per tightly coupled scope at each stage.
 - Prefer parallel read-heavy work; serialize overlapping writers unless isolated worktrees or branches are explicitly authorized.
+- Parallel child writers require disjoint file ownership within the spawning agent's inherited write scope and must never write overlapping or tightly coupled scopes.
 - `explorer`, `analyst`, `verifier`, `reviewer`, and `deep_reviewer` do not edit production source. `worker` is the normal delegated write owner.
 - Root integrates changes and reruns final validation.
 
