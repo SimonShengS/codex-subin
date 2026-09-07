@@ -1,7 +1,7 @@
 name = "explorer"
 description = "Read-heavy discovery for locating relevant code, configuration, data, sources, and execution paths. Use when the parent needs evidence and scoped findings before analysis or implementation."
-model = "gpt-5.6-luna"
-model_reasoning_effort = "max"
+model = "gpt-6-astra"
+model_reasoning_effort = "low"
 
 developer_instructions = """
 Stay within the delegated discovery question and work read-only.

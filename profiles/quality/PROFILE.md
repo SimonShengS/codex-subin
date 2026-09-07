@@ -4,20 +4,20 @@ Quality is the recommended Codex Subin Profile. It favors outcome quality while 
 
 | Role | Model | Effort |
 |---|---|---:|
-| `default` | `gpt-5.6-sol` | `medium` |
-| `explorer` | `gpt-5.6-luna` | `max` |
-| `analyst` | `gpt-5.6-sol` | `max` |
-| `worker` | `gpt-5.6-sol` | `medium` |
-| `verifier` | `gpt-5.6-sol` | `medium` |
-| `reviewer` | `gpt-5.6-sol` | `xhigh` |
-| `deep_reviewer` | `gpt-5.6-sol` | `max` |
+| `default` | `gpt-6-astra` | `medium` |
+| `explorer` | `gpt-6-astra` | `low` |
+| `analyst` | `gpt-6-astra` | `xhigh` |
+| `worker` | `gpt-6-astra` | `medium` |
+| `verifier` | `gpt-6-astra` | `medium` |
+| `reviewer` | `gpt-6-astra` | `medium` |
+| `deep_reviewer` | `gpt-6-astra` | `high` |
 
 ## Decision record
 
-- Profile reviewed: 2026-08-05.
-- Reference runtime: Codex `0.146.0-alpha.9.2`; runtime behavior remains environment-dependent.
-- Benchmark input: [CodexRadar snapshot dated 2026-08-05](../../docs/benchmarks/2026-08-05-codexradar.md).
-- Fallback route: `gpt-5.6-sol / medium`.
+- Profile reviewed: 2026-09-07.
+- Runtime compatibility: confirm Astra and per-role effort support in your client; this refresh does not ship a new runtime acceptance report.
+- Historical benchmark input (GPT-5.6 only, not Astra evidence): [CodexRadar snapshot dated 2026-08-05](../../docs/benchmarks/2026-08-05-codexradar.md).
+- Fallback route: `gpt-6-astra / medium`.
 
 Use a Full Runtime Probe after installation or a Codex upgrade. This package's TOMLs are configuration declarations, not proof that a route was activated.
 
@@ -25,9 +25,11 @@ The optional Session Defaults set `agents.max_concurrent_threads_per_session = 1
 
 ## Why these settings
 
-- `explorer` gets Luna/max because discovery is read-heavy, independently bounded, and benefits from persistence more than premium synthesis.
-- `analyst` and `deep_reviewer` get Sol/max because they carry high-value design, causal, and premise-level reasoning.
-- `worker` and `verifier` get Sol/medium because they are frequent and should operate within decided scope or explicit criteria.
-- `reviewer` gets Sol/xhigh because routine review is important and adversarial, but distinct from premise-level deep review.
+- `explorer` gets Astra/low for bounded evidence discovery with a focus on response time; the serialized effort is `low`, not `light`.
+- `analyst` gets Astra/xhigh for alternatives, architecture, and synthesis; `deep_reviewer` gets Astra/high for independent premise-level challenge.
+- `default`, `worker`, and `verifier` get Astra/medium for frequent, bounded work with clear objectives.
+- `reviewer` gets Astra/medium for routine bounded reviews. Choose deep_reviewer for premise-level work rather than raising effort based on importance.
 
 The Profile does not specify Root or Plan defaults. See [`examples/session-defaults.toml`](../../examples/session-defaults.toml).
+
+This mapping is a dated maintainer preference, not a measured Astra ranking. Use representative discovery, implementation, review, and analysis tasks to recalibrate. To roll back, restore a pre-Astra revision from Git and repeat the affected runtime probe.

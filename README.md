@@ -52,13 +52,13 @@ A **Profile** maps only subagent roles. Root and Plan settings are separate [Ses
 
 | Role | Model | Effort | Reasoning posture |
 |---|---|---:|---|
-| `default` | `gpt-5.6-sol` | `medium` | Balanced fallback |
-| `explorer` | `gpt-5.6-luna` | `max` | Cheap, persistent read-heavy discovery |
-| `analyst` | `gpt-5.6-sol` | `max` | High-value design and synthesis |
-| `worker` | `gpt-5.6-sol` | `medium` | Frequent implementation with balanced latency |
-| `verifier` | `gpt-5.6-sol` | `medium` | Objective checks with explicit criteria |
-| `reviewer` | `gpt-5.6-sol` | `xhigh` | Strong routine artifact review |
-| `deep_reviewer` | `gpt-5.6-sol` | `max` | Premise and cross-boundary challenge |
+| `default` | `gpt-6-astra` | `medium` | Balanced fallback |
+| `explorer` | `gpt-6-astra` | `low` | Responsive, bounded read-only discovery |
+| `analyst` | `gpt-6-astra` | `xhigh` | High-value design and synthesis |
+| `worker` | `gpt-6-astra` | `medium` | Frequent implementation with balanced latency |
+| `verifier` | `gpt-6-astra` | `medium` | Objective checks with explicit criteria |
+| `reviewer` | `gpt-6-astra` | `medium` | Bounded routine artifact review |
+| `deep_reviewer` | `gpt-6-astra` | `high` | Premise and cross-boundary challenge |
 
 ### Efficient
 
@@ -66,7 +66,7 @@ The Efficient Profile is identical except for `worker`, which uses `gpt-5.6-luna
 
 | Changed role | Quality | Efficient |
 |---|---|---|
-| `worker` | `gpt-5.6-sol / medium` | `gpt-5.6-luna / max` |
+| `worker` | `gpt-6-astra / medium` | `gpt-5.6-luna / max` |
 
 Both packages contain all seven TOMLs and preserve identical role instructions. There is no hidden inheritance chain.
 
@@ -74,7 +74,7 @@ Both packages contain all seven TOMLs and preserve identical role instructions. 
 
 Start with Quality when correctness and effect matter more than token cost, especially when implementation often crosses unfamiliar code or configuration. Try Efficient when most worker tasks are sharply bounded, easy to verify, and cost matters more than elapsed time.
 
-Do not mechanically raise every role to `max`. Effort is not a universal quality ladder: a higher setting may consume more time and tokens without improving a particular workload. Route high-reasoning work to `analyst`, `reviewer`, or `deep_reviewer`; keep frequent execution and explicit verification bounded.
+Do not mechanically raise every role to `max`. Effort is not a universal quality ladder: a higher setting may consume more time and tokens without improving a particular workload. Route high-reasoning work to `analyst` or `deep_reviewer`; keep frequent execution and explicit verification bounded.
 
 ## Concurrency and hierarchy
 
@@ -98,13 +98,13 @@ The initial implementation has a dated [two-level runtime probe](docs/runtime/20
 [`examples/session-defaults.toml`](examples/session-defaults.toml) is a **minimal fragment**, not a complete `config.toml`:
 
 ```toml
-model = "gpt-5.6-sol"
+model = "gpt-6-astra"
 model_reasoning_effort = "medium"
-plan_mode_reasoning_effort = "max"
+plan_mode_reasoning_effort = "xhigh"
 
 [agents]
 max_concurrent_threads_per_session = 10
-default_subagent_model = "gpt-5.6-sol"
+default_subagent_model = "gpt-6-astra"
 default_subagent_reasoning_effort = "medium"
 ```
 
@@ -149,7 +149,7 @@ Model behavior is dynamic. Availability, implementation, effort semantics, laten
 
 The initial choices considered a dated [2026-08-05 CodexRadar snapshot](docs/benchmarks/2026-08-05-codexradar.md). [CodexRadar](https://codexradar.com/) and its [Chinese dashboard](https://deng.codexradar.com/) are third-party sources, not OpenAI evaluations. Their IQ, duration, and estimated cost are useful signals, not universal truth.
 
-The snapshot helps explain why this release does not choose `Sol/high`, why frequent work begins at `Sol/medium`, and why `Luna/max` is attractive for discovery and a cost-efficient worker. The repository does not promise those relationships will persist.
+The snapshot explains the original GPT-5.6 choices, including avoiding Sol/high. It does not evaluate Astra. The 2026-09-07 refresh adopts Astra with analyst/xhigh, deep_reviewer/high, explorer/low, and the other roles/medium as a maintainer-selected starting point. No new Astra benchmark or runtime acceptance report is claimed. Efficient retains Luna/max only for its optional worker; reassess its cost and latency against Astra on your own tasks.
 
 ## Compatibility and limitations
 

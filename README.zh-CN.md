@@ -52,13 +52,13 @@ OpenAI 的[自定义 Agent 指南](https://developers.openai.com/codex/subagents
 
 | 角色 | 模型 | 档位 | 设计意图 |
 |---|---|---:|---|
-| `default` | `gpt-5.6-sol` | `medium` | 平衡的兜底路由 |
-| `explorer` | `gpt-5.6-luna` | `max` | 低成本、持续型只读发现 |
-| `analyst` | `gpt-5.6-sol` | `max` | 高价值方案设计与综合分析 |
-| `worker` | `gpt-5.6-sol` | `medium` | 高频实现与延迟之间的平衡 |
-| `verifier` | `gpt-5.6-sol` | `medium` | 针对明确标准的客观验证 |
-| `reviewer` | `gpt-5.6-sol` | `xhigh` | 强力的常规产物审查 |
-| `deep_reviewer` | `gpt-5.6-sol` | `max` | 前提与跨边界挑战 |
+| `default` | `gpt-6-astra` | `medium` | 平衡的兜底路由 |
+| `explorer` | `gpt-6-astra` | `low` | 低推理开销的有界只读发现 |
+| `analyst` | `gpt-6-astra` | `xhigh` | 高价值方案设计与综合分析 |
+| `worker` | `gpt-6-astra` | `medium` | 高频实现与延迟之间的平衡 |
+| `verifier` | `gpt-6-astra` | `medium` | 针对明确标准的客观验证 |
+| `reviewer` | `gpt-6-astra` | `medium` | 有界的常规产物审查 |
+| `deep_reviewer` | `gpt-6-astra` | `high` | 前提与跨边界挑战 |
 
 ### Efficient
 
@@ -66,7 +66,7 @@ Efficient 仅修改 `worker`：改用 `gpt-5.6-luna / max`。它追求更低成�
 
 | 变化角色 | Quality | Efficient |
 |---|---|---|
-| `worker` | `gpt-5.6-sol / medium` | `gpt-5.6-luna / max` |
+| `worker` | `gpt-6-astra / medium` | `gpt-5.6-luna / max` |
 
 两套包都包含完整七个 TOML，角色指令完全相同，不存在隐式继承链。
 
@@ -74,7 +74,7 @@ Efficient 仅修改 `worker`：改用 `gpt-5.6-luna / max`。它追求更低成�
 
 如果你更在意结果质量而非 token 成本，尤其实现经常跨越陌生代码或配置，先用 Quality。若多数实现任务边界非常清楚、容易验证，并且成本比耗时更重要，可以试用 Efficient。
 
-不要机械地把所有角色升到 `max`。Effort 不是放之四海皆准的质量阶梯：更高档位可能增加时间和 token，却不改善特定工作。把高推理需求路由给 `analyst`、`reviewer` 或 `deep_reviewer`，让高频实现和明确验证保持有界。
+不要机械地把所有角色升到 `max`。Effort 不是放之四海皆准的质量阶梯：更高档位可能增加时间和 token，却不改善特定工作。把高推理需求路由给 `analyst` 或 `deep_reviewer`，让高频实现和明确验证保持有界。
 
 ## 并发与层级
 
@@ -98,13 +98,13 @@ AGENTS 片段允许一层无需 Root 单独授权的按需再委派。第一层�
 [`examples/session-defaults.toml`](examples/session-defaults.toml) 是**最小片段**，不是完整 `config.toml`：
 
 ```toml
-model = "gpt-5.6-sol"
+model = "gpt-6-astra"
 model_reasoning_effort = "medium"
-plan_mode_reasoning_effort = "max"
+plan_mode_reasoning_effort = "xhigh"
 
 [agents]
 max_concurrent_threads_per_session = 10
-default_subagent_model = "gpt-5.6-sol"
+default_subagent_model = "gpt-6-astra"
 default_subagent_reasoning_effort = "medium"
 ```
 
@@ -149,7 +149,7 @@ Subin 有意不提供安装器、生成器或配置管理器。本地约定和 C
 
 初始配置参考了有明确日期的 [2026-08-05 CodexRadar 快照](docs/benchmarks/2026-08-05-codexradar.md)。[CodexRadar](https://codexradar.com/) 及其[中文面板](https://deng.codexradar.com/)属于第三方来源，并非 OpenAI 官方评测。IQ、耗时和估算成本是有价值的信号，不是普遍真理。
 
-该快照解释了本版本为何不选 `Sol/high`、为何高频工作从 `Sol/medium` 起步，以及为何 `Luna/max` 适合发现工作和成本优先的 worker。项目不承诺这些相对关系长期不变。
+这份快照解释的是初始 GPT-5.6 选择，包括当时避开 Sol/high 的原因，不能用于评判 Astra。2026-09-07 的更新采用 Astra：analyst/xhigh、deep_reviewer/high、explorer/low，其余角色/medium。这是维护者选择的起点，本次没有新增 Astra 基准或运行时验收报告。Efficient 仅为可选 worker 保留 Luna/max，实际成本与耗时需用自己的任务重新比较。
 
 ## 兼容性与限制
 

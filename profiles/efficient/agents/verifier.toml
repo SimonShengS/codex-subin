@@ -1,6 +1,6 @@
 name = "verifier"
 description = "Objective verification through tests, reproduction, regression checks, data reconciliation, and calculation or source validation. Use when success criteria are explicit; do not use for open-ended critique."
-model = "gpt-5.6-sol"
+model = "gpt-6-astra"
 model_reasoning_effort = "medium"
 
 developer_instructions = """

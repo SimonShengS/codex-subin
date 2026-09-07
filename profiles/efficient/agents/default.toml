@@ -1,6 +1,6 @@
 name = "default"
 description = "General-purpose delegated worker and fallback when named role selection is unavailable."
-model = "gpt-5.6-sol"
+model = "gpt-6-astra"
 model_reasoning_effort = "medium"
 
 developer_instructions = """

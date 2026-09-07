@@ -1,6 +1,6 @@
 name = "worker"
 description = "Execution-focused implementation for scoped code, configuration, scripts, reports, notebooks, or other artifacts after the direction is decided."
-model = "gpt-5.6-sol"
+model = "gpt-6-astra"
 model_reasoning_effort = "medium"
 
 developer_instructions = """

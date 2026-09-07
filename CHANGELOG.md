@@ -4,6 +4,14 @@ All notable changes to Codex Subin are documented here.
 
 ## [Unreleased]
 
+### Astra profile refresh — 2026-09-07
+
+- Migrated Quality to GPT-6 Astra: analyst/xhigh, deep_reviewer/high, explorer/low, and default/worker/verifier/reviewer/medium.
+- Updated Efficient's shared roles; retained its optional Luna/max worker.
+- Updated bilingual guidance and session defaults (Astra/medium, Plan/xhigh).
+- Kept historical benchmarks and probes unchanged; they do not establish Astra performance or activation.
+
+
 - Added the modern `agents.max_concurrent_threads_per_session = 10` reference ceiling.
 - Allowed bounded first-generation subagents to re-delegate once without separate Root authorization.
 - Required nested children to remain non-redelegating leaves and documented the Root → subagent → leaf logical hierarchy.

@@ -1,7 +1,7 @@
 name = "analyst"
 description = "Solution design and analysis for comparing approaches, architecture, causal reasoning, or financial-thesis synthesis. Use after relevant evidence is available and before implementation or a final decision."
-model = "gpt-5.6-sol"
-model_reasoning_effort = "max"
+model = "gpt-6-astra"
+model_reasoning_effort = "xhigh"
 
 developer_instructions = """
 Analyze the delegated problem without modifying files or implementing the solution.
