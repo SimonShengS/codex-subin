@@ -21,7 +21,7 @@ The reference Profile that prioritizes outcome quality while retaining balanced 
 _Avoid_: Optimal Profile, permanent best configuration
 
 **Efficient Profile**:
-A cost-efficiency variant of the Quality Profile that assigns Luna/max to Worker while preserving the other role mappings; it does not promise lower latency.
+A cost-efficiency variant of the Quality Profile that assigns GPT-6 Luna/max to Worker while preserving the other role mappings; it does not promise lower latency.
 _Avoid_: Faster Profile, low-intelligence Profile
 
 **Profile Package**:

@@ -52,21 +52,21 @@ OpenAI 的[自定义 Agent 指南](https://developers.openai.com/codex/subagents
 
 | 角色 | 模型 | 档位 | 设计意图 |
 |---|---|---:|---|
-| `default` | `gpt-6-astra` | `medium` | 平衡的兜底路由 |
-| `explorer` | `gpt-6-astra` | `low` | 低推理开销的有界只读发现 |
-| `analyst` | `gpt-6-astra` | `xhigh` | 高价值方案设计与综合分析 |
-| `worker` | `gpt-6-astra` | `medium` | 高频实现与延迟之间的平衡 |
-| `verifier` | `gpt-6-astra` | `medium` | 针对明确标准的客观验证 |
-| `reviewer` | `gpt-6-astra` | `medium` | 有界的常规产物审查 |
-| `deep_reviewer` | `gpt-6-astra` | `high` | 前提与跨边界挑战 |
+| `default` | `gpt-6-sol` | `medium` | 平衡的兜底路由 |
+| `explorer` | `gpt-6-luna` | `max` | 低推理开销的有界只读发现 |
+| `analyst` | `gpt-6-astra` | `high` | 高价值方案设计与综合分析 |
+| `worker` | `gpt-6-sol` | `high` | 高频实现与延迟之间的平衡 |
+| `verifier` | `gpt-6-sol` | `medium` | 针对明确标准的客观验证 |
+| `reviewer` | `gpt-6-sol` | `xhigh` | 有界的常规产物审查 |
+| `deep_reviewer` | `gpt-6-astra` | `medium` | 前提与跨边界挑战 |
 
 ### Efficient
 
-Efficient 仅修改 `worker`：改用 `gpt-5.6-luna / max`。它追求更低成本，**不保证更快**。
+Efficient 仅修改 `worker`：改用 `gpt-6-luna / max`。它追求更低成本，**不保证更快**。
 
 | 变化角色 | Quality | Efficient |
 |---|---|---|
-| `worker` | `gpt-6-astra / medium` | `gpt-5.6-luna / max` |
+| `worker` | `gpt-6-sol` | `high` |
 
 两套包都包含完整七个 TOML，角色指令完全相同，不存在隐式继承链。
 
@@ -78,20 +78,22 @@ Efficient 仅修改 `worker`：改用 `gpt-5.6-luna / max`。它追求更低成�
 
 ## 并发与层级
 
-对于确有并行工作负载的用户，Subin 推荐把子 Agent 线程容量上限设为 10：
+对于确有并行工作负载的用户，Subin 推荐把子 Agent 线程容量上限设为 7：
 
 ```toml
 [agents]
-max_concurrent_threads_per_session = 10
+max_concurrent_threads_per_session = 7
 ```
 
-这个上限不包含 Root，而且只是容量，不是目标数量。普通任务仍然只使用最小且有价值的角色集合。十个角色实例不等于新增十种角色；Subin 仍然只有七种工作类型。
+这个上限不包含 Root，而且只是容量，不是目标数量。普通任务仍然只使用最小且有价值的角色集合。七个角色实例不等于必须同时使用全部七种角色；Subin 仍然只有七种工作类型。
 
 AGENTS 片段允许一层无需 Root 单独授权的按需再委派。第一层子 Agent 可以在确实改善并行、上下文隔离或独立证据时创建有界子任务，并必须把每个子节点标记为不得再委派的叶子。最大逻辑结构是 Root → subagent → leaf subagent。
 
 当前公开的 Codex 配置没有受支持的 `agents.max_depth`，因此并发上限由运行时执行，逻辑深度由指令约束。不要为了形成层级而创建中间 manager，也不得制造重叠的并行写入。
 
 初始实现已有一份带日期的[两层运行时探针](docs/runtime/2026-08-05-two-level-probe.md)：权威元数据实际观察到 depth=2 的叶子，以及 Root 与四个同时运行的子 Agent。测试有意没有占满十个线程，因此十并发仍是配置声明，而不是基准证据。
+
+[2026-09-23 探针](docs/runtime/2026-09-23-gpt6-family-probe.md)观察到七个子 Agent 上限下，Root 与七个子 Agent 同时 running；本次未重测嵌套深度或持续负载。
 
 ## 会话默认值
 
@@ -103,8 +105,8 @@ model_reasoning_effort = "medium"
 plan_mode_reasoning_effort = "xhigh"
 
 [agents]
-max_concurrent_threads_per_session = 10
-default_subagent_model = "gpt-6-astra"
+max_concurrent_threads_per_session = 7
+default_subagent_model = "gpt-6-sol"
 default_subagent_reasoning_effort = "medium"
 ```
 
@@ -149,7 +151,7 @@ Subin 有意不提供安装器、生成器或配置管理器。本地约定和 C
 
 初始配置参考了有明确日期的 [2026-08-05 CodexRadar 快照](docs/benchmarks/2026-08-05-codexradar.md)。[CodexRadar](https://codexradar.com/) 及其[中文面板](https://deng.codexradar.com/)属于第三方来源，并非 OpenAI 官方评测。IQ、耗时和估算成本是有价值的信号，不是普遍真理。
 
-这份快照解释的是初始 GPT-5.6 选择，包括当时避开 Sol/high 的原因，不能用于评判 Astra。2026-09-07 的更新采用 Astra：analyst/xhigh、deep_reviewer/high、explorer/low，其余角色/medium。这是维护者选择的起点，本次没有新增 Astra 基准或运行时验收报告。Efficient 仅为可选 worker 保留 Luna/max，实际成本与耗时需用自己的任务重新比较。
+这份快照解释初始 GPT-5.6 的选择，包括当时避开 Sol/high 的原因，不能用于评判 GPT-6。2026-09-23 的方案按工作类型分配 Sol、Luna 和 Astra；[运行时探针](docs/runtime/2026-09-23-gpt6-family-probe.md)确认 Quality 的角色、模型、档位和启动行为，不代表质量、耗时或成本对比。Efficient 的 GPT-6 Luna/max worker 仍需用代表性任务验证。
 
 ## 兼容性与限制
 

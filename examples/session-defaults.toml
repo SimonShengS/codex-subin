@@ -6,6 +6,6 @@ model_reasoning_effort = "medium"
 plan_mode_reasoning_effort = "xhigh"
 
 [agents]
-max_concurrent_threads_per_session = 10
-default_subagent_model = "gpt-6-astra"
+max_concurrent_threads_per_session = 7
+default_subagent_model = "gpt-6-sol"
 default_subagent_reasoning_effort = "medium"

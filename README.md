@@ -52,21 +52,21 @@ A **Profile** maps only subagent roles. Root and Plan settings are separate [Ses
 
 | Role | Model | Effort | Reasoning posture |
 |---|---|---:|---|
-| `default` | `gpt-6-astra` | `medium` | Balanced fallback |
-| `explorer` | `gpt-6-astra` | `low` | Responsive, bounded read-only discovery |
-| `analyst` | `gpt-6-astra` | `xhigh` | High-value design and synthesis |
-| `worker` | `gpt-6-astra` | `medium` | Frequent implementation with balanced latency |
-| `verifier` | `gpt-6-astra` | `medium` | Objective checks with explicit criteria |
-| `reviewer` | `gpt-6-astra` | `medium` | Bounded routine artifact review |
-| `deep_reviewer` | `gpt-6-astra` | `high` | Premise and cross-boundary challenge |
+| `default` | `gpt-6-sol` | `medium` | Balanced fallback |
+| `explorer` | `gpt-6-luna` | `max` | Responsive, bounded read-only discovery |
+| `analyst` | `gpt-6-astra` | `high` | High-value design and synthesis |
+| `worker` | `gpt-6-sol` | `high` | Frequent implementation with balanced latency |
+| `verifier` | `gpt-6-sol` | `medium` | Objective checks with explicit criteria |
+| `reviewer` | `gpt-6-sol` | `xhigh` | Bounded routine artifact review |
+| `deep_reviewer` | `gpt-6-astra` | `medium` | Premise and cross-boundary challenge |
 
 ### Efficient
 
-The Efficient Profile is identical except for `worker`, which uses `gpt-5.6-luna / max`. It targets lower cost, **not necessarily lower latency**.
+The Efficient Profile is identical except for `worker`, which uses `gpt-6-luna / max`. It targets lower cost, **not necessarily lower latency**.
 
 | Changed role | Quality | Efficient |
 |---|---|---|
-| `worker` | `gpt-6-astra / medium` | `gpt-5.6-luna / max` |
+| `worker` | `gpt-6-sol` | `high` |
 
 Both packages contain all seven TOMLs and preserve identical role instructions. There is no hidden inheritance chain.
 
@@ -78,20 +78,22 @@ Do not mechanically raise every role to `max`. Effort is not a universal quality
 
 ## Concurrency and hierarchy
 
-Subin recommends a high-capacity ceiling of ten spawned-agent threads for users who have parallel workloads:
+Subin recommends a high-capacity ceiling of seven spawned-agent threads for users who have parallel workloads:
 
 ```toml
 [agents]
-max_concurrent_threads_per_session = 10
+max_concurrent_threads_per_session = 7
 ```
 
-The cap excludes Root and is capacity, not a target. A normal task still uses only the smallest useful set of roles. Ten role instances do not mean ten new role types: Subin retains the same seven work types.
+The cap excludes Root and is capacity, not a target. A normal task still uses only the smallest useful set of roles. Seven role instances do not require additional role types: Subin retains the same seven work types.
 
 The AGENTS fragment permits one level of on-demand re-delegation without separate Root authorization. A first-generation subagent may create independently bounded children when this materially improves parallelism, context isolation, or independent evidence; every child must be marked as a non-redelegating leaf. The resulting maximum logical hierarchy is Root → subagent → leaf subagent.
 
 Current public Codex configuration exposes no supported `agents.max_depth` setting, so concurrency is runtime-enforced while logical depth is instruction-governed. Do not introduce an intermediate manager merely to form a hierarchy, and never allow overlapping parallel writers.
 
 The initial implementation has a dated [two-level runtime probe](docs/runtime/2026-08-05-two-level-probe.md): it observed an authoritative depth-2 leaf and Root plus four simultaneously running child agents. The configured ceiling of ten was intentionally not saturated, so ten-way concurrency remains a configuration claim rather than benchmark evidence.
+
+The [2026-09-23 probe](docs/runtime/2026-09-23-gpt6-family-probe.md) observed Root plus seven children running under the current seven-child cap. It did not repeat the nested-depth probe or test sustained load.
 
 ## Session Defaults
 
@@ -103,8 +105,8 @@ model_reasoning_effort = "medium"
 plan_mode_reasoning_effort = "xhigh"
 
 [agents]
-max_concurrent_threads_per_session = 10
-default_subagent_model = "gpt-6-astra"
+max_concurrent_threads_per_session = 7
+default_subagent_model = "gpt-6-sol"
 default_subagent_reasoning_effort = "medium"
 ```
 
@@ -149,7 +151,7 @@ Model behavior is dynamic. Availability, implementation, effort semantics, laten
 
 The initial choices considered a dated [2026-08-05 CodexRadar snapshot](docs/benchmarks/2026-08-05-codexradar.md). [CodexRadar](https://codexradar.com/) and its [Chinese dashboard](https://deng.codexradar.com/) are third-party sources, not OpenAI evaluations. Their IQ, duration, and estimated cost are useful signals, not universal truth.
 
-The snapshot explains the original GPT-5.6 choices, including avoiding Sol/high. It does not evaluate Astra. The 2026-09-07 refresh adopts Astra with analyst/xhigh, deep_reviewer/high, explorer/low, and the other roles/medium as a maintainer-selected starting point. No new Astra benchmark or runtime acceptance report is claimed. Efficient retains Luna/max only for its optional worker; reassess its cost and latency against Astra on your own tasks.
+The snapshot explains the original GPT-5.6 choices, including avoiding Sol/high. It does not evaluate GPT-6. The 2026-09-23 profile distributes work across Sol, Luna, and Astra. The [runtime probe](docs/runtime/2026-09-23-gpt6-family-probe.md) confirms Quality's role/model/effort routing and startup, not comparative quality, latency, or cost. Efficient's GPT-6 Luna/max worker remains an optional candidate to evaluate.
 
 ## Compatibility and limitations
 

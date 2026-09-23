@@ -4,6 +4,14 @@ All notable changes to Codex Subin are documented here.
 
 ## [Unreleased]
 
+### GPT-6 family refresh — 2026-09-23
+
+- Synced Quality with the accepted seven-role Sol/Luna/Astra mapping; analyst uses Astra/high.
+- Updated Efficient's optional worker to GPT-6 Luna/max.
+- Set the reference concurrency ceiling to seven spawned agents and the optional subagent fallback to Sol/medium.
+- Added a sanitized seven-role v2 runtime probe: all returned READY; Root plus seven children were observed running. No long-task quality or stability claim is made.
+
+
 ### Astra profile refresh — 2026-09-07
 
 - Migrated Quality to GPT-6 Astra: analyst/xhigh, deep_reviewer/high, explorer/low, and default/worker/verifier/reviewer/medium.

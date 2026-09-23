@@ -1,7 +1,7 @@
 name = "worker"
 description = "Execution-focused implementation for scoped code, configuration, scripts, reports, notebooks, or other artifacts after the direction is decided."
-model = "gpt-6-astra"
-model_reasoning_effort = "medium"
+model = "gpt-6-sol"
+model_reasoning_effort = "high"
 
 developer_instructions = """
 Implement only the delegated objective and own only the files or directories assigned by the parent.
