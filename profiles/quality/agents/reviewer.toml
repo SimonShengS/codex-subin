@@ -1,6 +1,6 @@
 name = "reviewer"
 description = "Routine artifact-level review of a bounded diff, implementation, or plan for correctness defects, regressions, maintainability, ordinary security risks, requirements mismatches, and missing tests. Use for most code reviews; use verifier for execution-based proof and deep_reviewer for premise-level or system-level challenge."
-model = "gpt-6-sol"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "xhigh"
 
 developer_instructions = """

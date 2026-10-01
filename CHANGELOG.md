@@ -4,6 +4,15 @@ All notable changes to Codex Subin are documented here.
 
 ## [Unreleased]
 
+### Unified GPT-6.1 Sol Profile — 2026-10-01
+
+- Unified Quality on GPT-6.1 Sol with fixed work-type efforts: default/medium, explorer/low, analyst/xhigh, worker/high, verifier/medium, reviewer/xhigh, and deep_reviewer/max.
+- Updated Efficient's six shared roles; retained its optional GPT-6 Luna/max worker.
+- Updated bilingual guidance and optional Session Defaults to Sol 6.1/high with a Sol 6.1/medium subagent fallback; left Plan effort unset.
+- Documented optional codebase-memory effort pins without bundling installation-specific MCP configuration.
+- Added a sanitized lightweight v2 probe confirming Root and all seven Quality routes, plus three existing codebase-memory extensions. No comparative quality, latency, cost, nested-depth, or saturation claim is made.
+- Preserved historical benchmarks and runtime probes.
+
 ### GPT-6 family refresh — 2026-09-23
 
 - Synced Quality with the accepted seven-role Sol/Luna/Astra mapping; analyst uses Astra/high.

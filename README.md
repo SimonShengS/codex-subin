@@ -52,13 +52,15 @@ A **Profile** maps only subagent roles. Root and Plan settings are separate [Ses
 
 | Role | Model | Effort | Reasoning posture |
 |---|---|---:|---|
-| `default` | `gpt-6-sol` | `medium` | Balanced fallback |
-| `explorer` | `gpt-6-luna` | `max` | Responsive, bounded read-only discovery |
-| `analyst` | `gpt-6-astra` | `high` | High-value design and synthesis |
-| `worker` | `gpt-6-sol` | `high` | Frequent implementation with balanced latency |
-| `verifier` | `gpt-6-sol` | `medium` | Objective checks with explicit criteria |
-| `reviewer` | `gpt-6-sol` | `xhigh` | Bounded routine artifact review |
-| `deep_reviewer` | `gpt-6-astra` | `medium` | Premise and cross-boundary challenge |
+| `default` | `gpt-6.1-sol` | `medium` | Balanced fallback |
+| `explorer` | `gpt-6.1-sol` | `low` | Focused evidence and execution-path discovery |
+| `analyst` | `gpt-6.1-sol` | `xhigh` | Alternatives, architecture, and synthesis |
+| `worker` | `gpt-6.1-sol` | `high` | Scoped implementation, debugging, and fixes |
+| `verifier` | `gpt-6.1-sol` | `medium` | Objective checks with explicit criteria |
+| `reviewer` | `gpt-6.1-sol` | `xhigh` | Bounded routine artifact review |
+| `deep_reviewer` | `gpt-6.1-sol` | `max` | Premise and cross-boundary challenge |
+
+Quality uses one model with fixed effort by work type. This simplifies model selection while preserving different evidence and reasoning responsibilities. The [2026-10-01 lightweight probe](docs/runtime/2026-10-01-sol61-probe.md) observed all seven routes with the expected model and effort; it does not establish comparative task quality.
 
 ### Efficient
 
@@ -66,7 +68,7 @@ The Efficient Profile is identical except for `worker`, which uses `gpt-6-luna /
 
 | Changed role | Quality | Efficient |
 |---|---|---|
-| `worker` | `gpt-6-sol` | `high` |
+| `worker` | `gpt-6.1-sol / high` | `gpt-6-luna / max` |
 
 Both packages contain all seven TOMLs and preserve identical role instructions. There is no hidden inheritance chain.
 
@@ -75,6 +77,10 @@ Both packages contain all seven TOMLs and preserve identical role instructions. 
 Start with Quality when correctness and effect matter more than token cost, especially when implementation often crosses unfamiliar code or configuration. Try Efficient when most worker tasks are sharply bounded, easy to verify, and cost matters more than elapsed time.
 
 Do not mechanically raise every role to `max`. Effort is not a universal quality ladder: a higher setting may consume more time and tokens without improving a particular workload. Route high-reasoning work to `analyst` or `deep_reviewer`; keep frequent execution and explicit verification bounded.
+
+Explorer remains a focused evidence-discovery role at `low`; alternatives, causal synthesis, and architecture decisions belong to Analyst. Keep the registered pair fixed for ordinary delegation and select the role by its work boundary rather than to obtain a higher effort. The current [OpenAI model guidance](https://developers.openai.com/api/docs/models/gpt-6.1-sol) supports these effort values; [effort guidance](https://developers.openai.com/api/docs/guides/deployment-checklist) recommends evaluating quality and latency on representative tasks. These mappings are maintainer choices, not measured equivalents of Astra or a guarantee that more effort helps.
+
+Provider-specific agents are optional extensions, outside the seven-file packages. For existing codebase-memory installations, the maintainer also pins `codebase-memory` and `codebase-memory-scout` to `gpt-6.1-sol / medium`, and `codebase-memory-auditor` to `gpt-6.1-sol / high`. Keep the provider's tools and read-only instructions; its installation-specific MCP configuration is not bundled here.
 
 ## Concurrency and hierarchy
 
@@ -95,22 +101,23 @@ The initial implementation has a dated [two-level runtime probe](docs/runtime/20
 
 The [2026-09-23 probe](docs/runtime/2026-09-23-gpt6-family-probe.md) observed Root plus seven children running under the current seven-child cap. It did not repeat the nested-depth probe or test sustained load.
 
+The [2026-10-01 probe](docs/runtime/2026-10-01-sol61-probe.md) checked the unified Sol 6.1 routes in small batches. It did not retest concurrency saturation or nested depth.
+
 ## Session Defaults
 
 [`examples/session-defaults.toml`](examples/session-defaults.toml) is a **minimal fragment**, not a complete `config.toml`:
 
 ```toml
-model = "gpt-6-astra"
-model_reasoning_effort = "medium"
-plan_mode_reasoning_effort = "xhigh"
+model = "gpt-6.1-sol"
+model_reasoning_effort = "high"
 
 [agents]
 max_concurrent_threads_per_session = 7
-default_subagent_model = "gpt-6-sol"
+default_subagent_model = "gpt-6.1-sol"
 default_subagent_reasoning_effort = "medium"
 ```
 
-The Root remains responsible for scope, decisions, integration, final validation, and completion claims. `ultra` can be selected for a top-level session when available, but it is deliberately not a custom-agent Profile default. See the current [Codex model documentation](https://developers.openai.com/codex/models/) for supported models and effort levels.
+The Root remains responsible for scope, decisions, integration, final validation, and completion claims. Plan effort is deliberately left unset in this example; use the current host's mode controls. A manually selected Root model or effort can differ from these defaults. See the current [Codex model documentation](https://developers.openai.com/codex/models/) for supported models and effort levels.
 
 ## Apply manually or ask Codex
 
@@ -151,7 +158,7 @@ Model behavior is dynamic. Availability, implementation, effort semantics, laten
 
 The initial choices considered a dated [2026-08-05 CodexRadar snapshot](docs/benchmarks/2026-08-05-codexradar.md). [CodexRadar](https://codexradar.com/) and its [Chinese dashboard](https://deng.codexradar.com/) are third-party sources, not OpenAI evaluations. Their IQ, duration, and estimated cost are useful signals, not universal truth.
 
-The snapshot explains the original GPT-5.6 choices, including avoiding Sol/high. It does not evaluate GPT-6. The 2026-09-23 profile distributes work across Sol, Luna, and Astra. The [runtime probe](docs/runtime/2026-09-23-gpt6-family-probe.md) confirms Quality's role/model/effort routing and startup, not comparative quality, latency, or cost. Efficient's GPT-6 Luna/max worker remains an optional candidate to evaluate.
+The snapshot explains the original GPT-5.6 choices, including avoiding Sol/high. It does not evaluate GPT-6 or GPT-6.1. The historical [2026-09-23 probe](docs/runtime/2026-09-23-gpt6-family-probe.md) records the earlier mixed-model Profile. The current [2026-10-01 probe](docs/runtime/2026-10-01-sol61-probe.md) confirms unified Sol 6.1 role/model/effort routing and minimal execution, not comparative quality, latency, or cost. Efficient's GPT-6 Luna/max worker remains an optional candidate to evaluate.
 
 ## Compatibility and limitations
 
