@@ -1,6 +1,6 @@
 # 应用 Codex Subin Profile
 
-在需要配置的 Codex 环境中使用本提示词。把 `<PROFILE>` 替换为 `quality` 或 `efficient`，并让 Codex 能读取本仓库。
+在需要配置的 Codex 环境中使用本提示词。把 `<PROFILE>` 替换为 `quality`、`efficient` 或 `premium`，并让 Codex 能读取本仓库。Quality 仍是日常推荐；选择 Premium 前，请审阅其 Profile 文档中尚待验证的取舍。
 
 ```text
 把 Codex Subin 的 <PROFILE> Profile 应用到当前 Codex 环境。

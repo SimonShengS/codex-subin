@@ -6,7 +6,7 @@ Use **Full Probe** after initial installation, a Codex upgrade, or a broad Profi
 Perform a read-only Codex Subin runtime acceptance probe. Do not modify configuration or project files.
 
 Probe mode: <FULL or FOCUSED>
-Expected Profile: <quality, efficient, or a supplied custom matrix>
+Expected Profile: <quality, efficient, premium, or a supplied custom matrix>
 Focused roles, if any: <role list>
 
 Evidence rules:
@@ -18,6 +18,7 @@ Evidence rules:
 - For each child, inspect host-side structured evidence where exposed: requested agent_type, session_meta.agent_role, turn_context model and effort, multi_agent_version, and injected developer instructions.
 - A null or missing role field is not automatically success or failure. Mark exactly what it leaves unobservable.
 - Child prose is not authoritative runtime evidence.
+- Read the expected mapping from the selected Profile Package. Historical evidence for another Profile cannot establish this Profile's activation.
 
 Hierarchy check for a Full Probe:
 - Give one first-generation role two independently bounded read-only evidence dimensions and require it to decide and execute the smallest useful child delegation without asking Root for separate authorization.

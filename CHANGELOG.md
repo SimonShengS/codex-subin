@@ -4,6 +4,13 @@ All notable changes to Codex Subin are documented here.
 
 ## [Unreleased]
 
+### Optional Premium Profile — 2026-10-29
+
+- Added a complete seven-role Premium package: Astra/medium for default, worker, and verifier; Astra/high for analyst and reviewer; Astra/xhigh for deep_reviewer; Sol 6.1/low for explorer.
+- Preserved Quality as the daily recommendation and left both existing packages' mappings unchanged.
+- Updated bilingual selection, application, and runtime-probe guidance; documented official support separately from local routing inference and representative evaluation needs.
+- Kept Root/Plan defaults, concurrency, hierarchy, provider extensions, and historical evidence unchanged. Premium has not undergone a post-restart Runtime Probe; comparative quality, elapsed time, and consumption remain unverified.
+
 ### Unified GPT-6.1 Sol Profile — 2026-10-01
 
 - Unified Quality on GPT-6.1 Sol with fixed work-type efforts: default/medium, explorer/low, analyst/xhigh, worker/high, verifier/medium, reviewer/xhigh, and deep_reviewer/max.

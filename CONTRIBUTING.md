@@ -5,7 +5,7 @@ Codex Subin is a small reference kit. Contributions should make its decisions ea
 ## Principles
 
 - Route by bounded work type, not simulated persona.
-- Keep `quality` and `efficient` as complete seven-file packages.
+- Keep `quality`, `efficient`, and `premium` as complete seven-file packages.
 - Preserve role semantics across Profiles; a Profile difference should normally be limited to `model` and `model_reasoning_effort`.
 - Keep concurrency capacity distinct from role count and observed runtime concurrency.
 - Preserve the bounded Root → subagent → leaf hierarchy: nested children are leaves, and overlapping writers remain prohibited.

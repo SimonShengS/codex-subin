@@ -1,6 +1,6 @@
 # Apply a Codex Subin Profile
 
-Use this prompt in the Codex environment you want to configure. Replace `<PROFILE>` with `quality` or `efficient` and provide access to this repository.
+Use this prompt in the Codex environment you want to configure. Replace `<PROFILE>` with `quality`, `efficient`, or `premium` and provide access to this repository. Quality remains the daily recommendation; review Premium's unverified tradeoffs in its Profile document before selecting it.
 
 ```text
 Apply the Codex Subin <PROFILE> Profile to this Codex environment.

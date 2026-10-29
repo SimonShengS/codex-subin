@@ -6,7 +6,7 @@
 执行一次只读的 Codex Subin 运行时验收探针。不要修改配置或项目文件。
 
 探针模式：<完整或聚焦>
-预期 Profile：<quality、efficient，或提供的 custom matrix>
+预期 Profile：<quality、efficient、premium，或提供的 custom matrix>
 聚焦角色（如适用）：<角色列表>
 
 证据规则：
@@ -18,6 +18,7 @@
 - 对每个子 Agent，在接口提供时检查宿主侧结构化证据：请求的 agent_type、session_meta.agent_role、turn_context 的 model/effort、multi_agent_version、注入的 developer instructions。
 - role 字段为 null 或缺失不自动代表成功或失败；必须说明因此无法观测的具体项目。
 - 子 Agent 的文字自述不是权威运行时证据。
+- 从所选 Profile Package 读取预期映射。其他 Profile 的历史证据不能证明本 Profile 已激活。
 
 完整探针的层级检查：
 - 给一个第一层角色两个相互独立的只读证据维度，要求它无需向 Root 请求单独授权，自行判断并执行最小且有价值的子委派。

@@ -10,7 +10,7 @@ Codex Subin 是一套有明确观点、但可自行调整的 Codex subagent 参�
 
 ## 快速开始
 
-1. 选择 [`quality`](profiles/quality/PROFILE.md)（推荐）或 [`efficient`](profiles/efficient/PROFILE.md)。
+1. 选择 [`quality`](profiles/quality/PROFILE.md)（日常推荐）、[`efficient`](profiles/efficient/PROFILE.md)（成本效率候选）或 [`premium`](profiles/premium/PROFILE.md)（可选高档候选）。
 2. 审阅该 Profile Package 中的七个 TOML 文件。
 3. 将它们复制或谨慎合并到你的 Codex 自定义 Agent 目录。
 4. 按需把 [`examples/AGENTS.fragment.md`](examples/AGENTS.fragment.md) 合并到全局或项目指令，并审阅 [`examples/session-defaults.toml`](examples/session-defaults.toml)。
@@ -48,7 +48,7 @@ OpenAI 的[自定义 Agent 指南](https://developers.openai.com/codex/subagents
 
 **Profile** 只映射 subagent 角色。Root 与 Plan 档位属于独立的[会话默认值](#会话默认值)。
 
-### Quality（推荐）
+### Quality（日常推荐）
 
 | 角色 | 模型 | 档位 | 设计意图 |
 |---|---|---:|---|
@@ -70,15 +70,29 @@ Efficient 仅修改 `worker`：改用 `gpt-6-luna / max`。它追求更低成本
 |---|---|---|
 | `worker` | `gpt-6.1-sol / high` | `gpt-6-luna / max` |
 
-两套包都包含完整七个 TOML，角色指令完全相同，不存在隐式继承链。
+### Premium（可选高档候选）
+
+| 角色 | 模型 | 档位 | 设计意图 |
+|---|---|---:|---|
+| `default` | `gpt-6-astra` | `medium` | 通用委派与兜底路由 |
+| `explorer` | `gpt-6.1-sol` | `low` | 聚焦证据与执行路径发现 |
+| `analyst` | `gpt-6-astra` | `high` | 方案比较、架构与综合分析 |
+| `worker` | `gpt-6-astra` | `medium` | 有界实现、调试与修复 |
+| `verifier` | `gpt-6-astra` | `medium` | 针对明确标准的客观验证 |
+| `reviewer` | `gpt-6-astra` | `high` | 有界的常规产物审查 |
+| `deep_reviewer` | `gpt-6-astra` | `xhigh` | 前提与跨边界挑战 |
+
+Premium 的 [2026-10-29 设计记录](profiles/premium/PROFILE.md)区分官方 Astra 支持与固定分工背后的本地推断。Premium 尚未做重启后运行时探针，旧探针不能证明它已激活。相对质量、耗时和消耗仍待验证。
+
+三套包都包含完整七个 TOML，角色描述、权限与指令完全相同，仅模型与 effort 不同，不存在隐式继承链。
 
 ## 如何选择
 
-如果你更在意结果质量而非 token 成本，尤其实现经常跨越陌生代码或配置，先用 Quality。若多数实现任务边界非常清楚、容易验证，并且成本比耗时更重要，可以试用 Efficient。
+日常工作如果更在意结果质量而非 token 成本，尤其实现经常跨越陌生代码或配置，先用 Quality。若多数实现任务边界非常清楚、容易验证，并且成本比耗时更重要，可以试用 Efficient。若高要求的分析、实现或审查有较高失败代价，且愿意对照 Quality 测量质量、耗时和消耗，可以评估 Premium。Premium 不是已证实的升级；[其 Profile 文档](profiles/premium/PROFILE.md)列出了代表任务与回滚到 Quality 的方式。
 
 不要机械地把所有角色升到 `max`。Effort 不是放之四海皆准的质量阶梯：更高档位可能增加时间和 token，却不改善特定工作。把高推理需求路由给 `analyst` 或 `deep_reviewer`，让高频实现和明确验证保持有界。
 
-Explorer 固定为 `low`，负责聚焦的证据发现；方案比较、因果综合和架构决策属于 Analyst。普通委派保持注册角色的模型与档位，按工作边界选角色，而不是为获得更高档位改名路由。当前[官方模型说明](https://developers.openai.com/api/docs/models/gpt-6.1-sol)支持这些 effort 值；[effort 指导](https://developers.openai.com/api/docs/guides/deployment-checklist)建议用代表性任务比较质量与耗时。这些映射是维护者选择，不能据此声称等同于 Astra 或更高档位必然更好。
+Explorer 固定为 `low`，负责聚焦的证据发现；方案比较、因果综合和架构决策属于 Analyst。普通委派保持注册角色的模型与档位，按工作边界选角色，而不是为获得更高档位改名路由。当前 [Sol 模型说明](https://developers.openai.com/api/docs/models/gpt-6.1-sol)与 [Astra 模型说明](https://developers.openai.com/api/docs/models/gpt-6-astra)支持配置的 effort 值；[effort 指导](https://developers.openai.com/api/docs/guides/deployment-checklist)建议用代表性任务比较质量与耗时。这些映射是维护者选择，不代表经过测量的跨模型等效关系，也不保证更高档位必然更好。
 
 Provider 专用 Agent 属于可选扩展，不计入七文件包。对于已有 codebase-memory 安装，维护者同时将 `codebase-memory` 和 `codebase-memory-scout` 固定为 `gpt-6.1-sol / medium`，将 `codebase-memory-auditor` 固定为 `gpt-6.1-sol / high`。保留 provider 的工具与只读指令；本项目不打包与具体安装有关的 MCP 配置。
 
@@ -158,7 +172,7 @@ Subin 有意不提供安装器、生成器或配置管理器。本地约定和 C
 
 初始配置参考了有明确日期的 [2026-08-05 CodexRadar 快照](docs/benchmarks/2026-08-05-codexradar.md)。[CodexRadar](https://codexradar.com/) 及其[中文面板](https://deng.codexradar.com/)属于第三方来源，并非 OpenAI 官方评测。IQ、耗时和估算成本是有价值的信号，不是普遍真理。
 
-这份快照解释初始 GPT-5.6 的选择，包括当时避开 Sol/high 的原因，不能用于评判 GPT-6 或 GPT-6.1。历史的 [2026-09-23 探针](docs/runtime/2026-09-23-gpt6-family-probe.md)记录先前的混合模型 Profile。当前 [2026-10-01 探针](docs/runtime/2026-10-01-sol61-probe.md)确认统一 Sol 6.1 的角色、模型、档位和最小执行，不代表质量、耗时或成本对比。Efficient 的 GPT-6 Luna/max worker 仍需用代表性任务验证。
+这份快照解释初始 GPT-5.6 的选择，包括当时避开 Sol/high 的原因，不能用于评判 GPT-6 或 GPT-6.1。历史的 [2026-09-23 探针](docs/runtime/2026-09-23-gpt6-family-probe.md)记录先前的混合模型 Profile。[2026-10-01 探针](docs/runtime/2026-10-01-sol61-probe.md)确认统一 Sol 6.1 的角色、模型、档位和最小执行，不代表质量、耗时或成本对比。Efficient 的 GPT-6 Luna/max worker 仍需用代表性任务验证。Premium 的 2026-10-29 映射既无重启后运行时探针，也无对照任务证据；上述两份历史探针都不能验证它。
 
 ## 兼容性与限制
 
