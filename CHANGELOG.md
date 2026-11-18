@@ -4,6 +4,12 @@ All notable changes to Codex Subin are documented here.
 
 ## [Unreleased]
 
+### GPT-6.2 model pins — 2026-11-18
+
+- Replaced GPT-6.1 Sol pins with GPT-6.2 Sol across the three Profile Packages, optional Session Defaults, and documented codebase-memory recommendations. Updated Premium's six GPT-6 Astra pins to GPT-6.2 Astra.
+- Kept all role semantics and efforts, Efficient's GPT-6 Luna/max worker, the seven-thread ceiling, and the unset Plan effort.
+- Preserved prior probes and benchmarks as historical evidence. They do not verify GPT-6.2 activation or comparative quality, latency, or cost.
+
 ### Optional Premium Profile — 2026-10-29
 
 - Added a complete seven-role Premium package: Astra/medium for default, worker, and verifier; Astra/high for analyst and reviewer; Astra/xhigh for deep_reviewer; Sol 6.1/low for explorer.

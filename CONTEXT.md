@@ -25,7 +25,7 @@ A cost-efficiency variant of the Quality Profile that assigns GPT-6 Luna/max to 
 _Avoid_: Faster Profile, low-intelligence Profile
 
 **Premium Profile**:
-An optional higher-tier Profile that retains Sol 6.1/low for Explorer and assigns Astra with fixed work-type efforts to the other six roles. Its comparative quality, elapsed time, and consumption remain unverified; Quality remains the daily recommendation.
+An optional higher-tier Profile that assigns GPT-6.2 Sol/low to Explorer and GPT-6.2 Astra with fixed work-type efforts to the other six roles. Its comparative quality, elapsed time, and consumption remain unverified; Quality remains the daily recommendation.
 _Avoid_: Proven upgrade, guaranteed quality tier, activated runtime
 
 **Profile Package**:

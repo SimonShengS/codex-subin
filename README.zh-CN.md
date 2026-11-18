@@ -52,15 +52,15 @@ OpenAI 的[自定义 Agent 指南](https://developers.openai.com/codex/subagents
 
 | 角色 | 模型 | 档位 | 设计意图 |
 |---|---|---:|---|
-| `default` | `gpt-6.1-sol` | `medium` | 平衡的兜底路由 |
-| `explorer` | `gpt-6.1-sol` | `low` | 聚焦证据与执行路径发现 |
-| `analyst` | `gpt-6.1-sol` | `xhigh` | 方案比较、架构与综合分析 |
-| `worker` | `gpt-6.1-sol` | `high` | 有界实现、调试与修复 |
-| `verifier` | `gpt-6.1-sol` | `medium` | 针对明确标准的客观验证 |
-| `reviewer` | `gpt-6.1-sol` | `xhigh` | 有界的常规产物审查 |
-| `deep_reviewer` | `gpt-6.1-sol` | `max` | 前提与跨边界挑战 |
+| `default` | `gpt-6.2-sol` | `medium` | 平衡的兜底路由 |
+| `explorer` | `gpt-6.2-sol` | `low` | 聚焦证据与执行路径发现 |
+| `analyst` | `gpt-6.2-sol` | `xhigh` | 方案比较、架构与综合分析 |
+| `worker` | `gpt-6.2-sol` | `high` | 有界实现、调试与修复 |
+| `verifier` | `gpt-6.2-sol` | `medium` | 针对明确标准的客观验证 |
+| `reviewer` | `gpt-6.2-sol` | `xhigh` | 有界的常规产物审查 |
+| `deep_reviewer` | `gpt-6.2-sol` | `max` | 前提与跨边界挑战 |
 
-Quality 统一模型，并按工作类型固定 effort，让模型选择更简单，同时保留不同的证据与推理职责。[2026-10-01 轻量探针](docs/runtime/2026-10-01-sol61-probe.md)实际观察到七种路由均使用预期模型与档位；它不证明任务质量的相对优劣。
+Quality 统一使用 GPT-6.2 Sol，并按工作类型固定档位，让模型选择更简单，同时保留不同的证据与推理职责。[2026-10-01 轻量探针](docs/runtime/2026-10-01-sol61-probe.md)观察的是此前的 GPT-6.1 Sol 路由，不能证明 GPT-6.2 路由已激活。
 
 ### Efficient
 
@@ -68,21 +68,21 @@ Efficient 仅修改 `worker`：改用 `gpt-6-luna / max`。它追求更低成本
 
 | 变化角色 | Quality | Efficient |
 |---|---|---|
-| `worker` | `gpt-6.1-sol / high` | `gpt-6-luna / max` |
+| `worker` | `gpt-6.2-sol / high` | `gpt-6-luna / max` |
 
 ### Premium（可选高档候选）
 
 | 角色 | 模型 | 档位 | 设计意图 |
 |---|---|---:|---|
-| `default` | `gpt-6-astra` | `medium` | 通用委派与兜底路由 |
-| `explorer` | `gpt-6.1-sol` | `low` | 聚焦证据与执行路径发现 |
-| `analyst` | `gpt-6-astra` | `high` | 方案比较、架构与综合分析 |
-| `worker` | `gpt-6-astra` | `medium` | 有界实现、调试与修复 |
-| `verifier` | `gpt-6-astra` | `medium` | 针对明确标准的客观验证 |
-| `reviewer` | `gpt-6-astra` | `high` | 有界的常规产物审查 |
-| `deep_reviewer` | `gpt-6-astra` | `xhigh` | 前提与跨边界挑战 |
+| `default` | `gpt-6.2-astra` | `medium` | 通用委派与兜底路由 |
+| `explorer` | `gpt-6.2-sol` | `low` | 聚焦证据与执行路径发现 |
+| `analyst` | `gpt-6.2-astra` | `high` | 方案比较、架构与综合分析 |
+| `worker` | `gpt-6.2-astra` | `medium` | 有界实现、调试与修复 |
+| `verifier` | `gpt-6.2-astra` | `medium` | 针对明确标准的客观验证 |
+| `reviewer` | `gpt-6.2-astra` | `high` | 有界的常规产物审查 |
+| `deep_reviewer` | `gpt-6.2-astra` | `xhigh` | 前提与跨边界挑战 |
 
-Premium 的 [2026-10-29 设计记录](profiles/premium/PROFILE.md)区分官方 Astra 支持与固定分工背后的本地推断。Premium 尚未做重启后运行时探针，旧探针不能证明它已激活。相对质量、耗时和消耗仍待验证。
+Premium 的 [Profile 决策记录](profiles/premium/PROFILE.md)区分官方模型信息与这些固定分工的本地依据。历史探针不能证明当前配置已激活；相对质量、耗时和消耗仍待验证。
 
 三套包都包含完整七个 TOML，角色描述、权限与指令完全相同，仅模型与 effort 不同，不存在隐式继承链。
 
@@ -92,9 +92,9 @@ Premium 的 [2026-10-29 设计记录](profiles/premium/PROFILE.md)区分官方 A
 
 不要机械地把所有角色升到 `max`。Effort 不是放之四海皆准的质量阶梯：更高档位可能增加时间和 token，却不改善特定工作。把高推理需求路由给 `analyst` 或 `deep_reviewer`，让高频实现和明确验证保持有界。
 
-Explorer 固定为 `low`，负责聚焦的证据发现；方案比较、因果综合和架构决策属于 Analyst。普通委派保持注册角色的模型与档位，按工作边界选角色，而不是为获得更高档位改名路由。当前 [Sol 模型说明](https://developers.openai.com/api/docs/models/gpt-6.1-sol)与 [Astra 模型说明](https://developers.openai.com/api/docs/models/gpt-6-astra)支持配置的 effort 值；[effort 指导](https://developers.openai.com/api/docs/guides/deployment-checklist)建议用代表性任务比较质量与耗时。这些映射是维护者选择，不代表经过测量的跨模型等效关系，也不保证更高档位必然更好。
+Explorer 固定为 `low`，负责聚焦的证据发现；方案比较、因果综合和架构决策属于 Analyst。普通委派保持注册角色的模型与档位，按工作边界选角色，而不是为获得更高档位改名路由。模型详情见官方 [GPT-6.2 Sol](https://developers.openai.com/api/docs/models/gpt-6.2-sol) 和 [GPT-6.2 Astra](https://developers.openai.com/api/docs/models/gpt-6.2-astra) 页面。参考 OpenAI 的 [effort 指导](https://developers.openai.com/api/docs/guides/deployment-checklist)，用代表性任务评估档位选择。这些映射是维护者选择，不代表经过测量的跨模型等效关系，也不保证更高档位必然更好。
 
-Provider 专用 Agent 属于可选扩展，不计入七文件包。对于已有 codebase-memory 安装，维护者同时将 `codebase-memory` 和 `codebase-memory-scout` 固定为 `gpt-6.1-sol / medium`，将 `codebase-memory-auditor` 固定为 `gpt-6.1-sol / high`。保留 provider 的工具与只读指令；本项目不打包与具体安装有关的 MCP 配置。
+Provider 专用 Agent 属于可选扩展，不计入七文件包。对于已有 codebase-memory 安装，维护者同时将 `codebase-memory` 和 `codebase-memory-scout` 固定为 `gpt-6.2-sol / medium`，将 `codebase-memory-auditor` 固定为 `gpt-6.2-sol / high`。保留 provider 的工具与只读指令；本项目不打包与具体安装有关的 MCP 配置。
 
 ## 并发与层级
 
@@ -122,12 +122,12 @@ AGENTS 片段允许一层无需 Root 单独授权的按需再委派。第一层�
 [`examples/session-defaults.toml`](examples/session-defaults.toml) 是**最小片段**，不是完整 `config.toml`：
 
 ```toml
-model = "gpt-6.1-sol"
+model = "gpt-6.2-sol"
 model_reasoning_effort = "high"
 
 [agents]
 max_concurrent_threads_per_session = 7
-default_subagent_model = "gpt-6.1-sol"
+default_subagent_model = "gpt-6.2-sol"
 default_subagent_reasoning_effort = "medium"
 ```
 
@@ -172,7 +172,7 @@ Subin 有意不提供安装器、生成器或配置管理器。本地约定和 C
 
 初始配置参考了有明确日期的 [2026-08-05 CodexRadar 快照](docs/benchmarks/2026-08-05-codexradar.md)。[CodexRadar](https://codexradar.com/) 及其[中文面板](https://deng.codexradar.com/)属于第三方来源，并非 OpenAI 官方评测。IQ、耗时和估算成本是有价值的信号，不是普遍真理。
 
-这份快照解释初始 GPT-5.6 的选择，包括当时避开 Sol/high 的原因，不能用于评判 GPT-6 或 GPT-6.1。历史的 [2026-09-23 探针](docs/runtime/2026-09-23-gpt6-family-probe.md)记录先前的混合模型 Profile。[2026-10-01 探针](docs/runtime/2026-10-01-sol61-probe.md)确认统一 Sol 6.1 的角色、模型、档位和最小执行，不代表质量、耗时或成本对比。Efficient 的 GPT-6 Luna/max worker 仍需用代表性任务验证。Premium 的 2026-10-29 映射既无重启后运行时探针，也无对照任务证据；上述两份历史探针都不能验证它。
+这份快照解释初始 GPT-5.6 的选择，包括当时避开 Sol/high 的原因，不能用于评判 GPT-6 系列。历史的 [2026-09-23 探针](docs/runtime/2026-09-23-gpt6-family-probe.md)记录了先前的混合模型 Profile；[2026-10-01 探针](docs/runtime/2026-10-01-sol61-probe.md)确认当时统一的 GPT-6.1 Sol 路由及最小执行。两者都不能证明 GPT-6.2 已激活，也不提供质量、耗时或成本的对比。Efficient 的 GPT-6 Luna/max worker 同样需要用代表性任务评估。
 
 ## 兼容性与限制
 

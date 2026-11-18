@@ -1,6 +1,6 @@
 name = "deep_reviewer"
 description = "Deep independent review of completed system designs, cross-cutting implementations, research analyses, or financial theses. Use when the primary question is whether the overall system or thesis remains valid under hidden assumptions, alternative explanations, counterexamples, evidence gaps, and cross-boundary failure modes; not for routine code review or explicit acceptance checks."
-model = "gpt-6.1-sol"
+model = "gpt-6.2-sol"
 model_reasoning_effort = "max"
 
 developer_instructions = """

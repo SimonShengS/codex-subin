@@ -4,20 +4,20 @@ Premium is an optional higher-tier Profile for demanding work whose failure cost
 
 | Role | Model | Effort |
 |---|---|---:|
-| `default` | `gpt-6-astra` | `medium` |
-| `explorer` | `gpt-6.1-sol` | `low` |
-| `analyst` | `gpt-6-astra` | `high` |
-| `worker` | `gpt-6-astra` | `medium` |
-| `verifier` | `gpt-6-astra` | `medium` |
-| `reviewer` | `gpt-6-astra` | `high` |
-| `deep_reviewer` | `gpt-6-astra` | `xhigh` |
+| `default` | `gpt-6.2-astra` | `medium` |
+| `explorer` | `gpt-6.2-sol` | `low` |
+| `analyst` | `gpt-6.2-astra` | `high` |
+| `worker` | `gpt-6.2-astra` | `medium` |
+| `verifier` | `gpt-6.2-astra` | `medium` |
+| `reviewer` | `gpt-6.2-astra` | `high` |
+| `deep_reviewer` | `gpt-6.2-astra` | `xhigh` |
 
 ## Decision record
 
-- Design date: 2026-10-29.
-- Official support: the [Astra model documentation](https://developers.openai.com/api/docs/models/gpt-6-astra) lists `low`, `medium`, `high`, `xhigh`, and `max`; the [model-selection guide](https://developers.openai.com/api/docs/guides/model-selection) positions Astra/medium for complex, broad-context tasks and Astra/xhigh for demanding analysis. These capability statements do not validate Subin's individual role assignments.
-- Local inference: retain Sol 6.1/low for focused discovery; use Astra/medium for general delegated work, implementation, and objective verification; use Astra/high for synthesis and bounded review; reserve Astra/xhigh for premise-level and cross-boundary challenge.
-- Runtime status: Premium has not undergone a post-restart Runtime Probe. Historical benchmark and runtime notes cover other mappings and cannot establish Premium activation.
+- Designed 2026-10-29; model pins refreshed 2026-11-18 without changing roles or efforts.
+- Official model information: [GPT-6.2 Astra](https://developers.openai.com/api/docs/models/gpt-6.2-astra) and [GPT-6.2 Sol](https://developers.openai.com/api/docs/models/gpt-6.2-sol). These pages do not validate Subin's role assignments.
+- Local rationale: use Sol/low for focused discovery; use Astra/medium for general delegated work, implementation, and objective verification; use Astra/high for synthesis and bounded review; reserve Astra/xhigh for premise-level and cross-boundary challenge.
+- Runtime status: historical probes cover other mappings and do not verify activation of this one. Run a Full Runtime Probe after applying it.
 - Rollback choice: restore the complete [Quality package](../quality/PROFILE.md), restart Codex, and run a [Full Runtime Probe](../../prompts/verify-runtime.md).
 
 ## Fixed division of work

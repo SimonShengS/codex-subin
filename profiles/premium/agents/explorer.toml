@@ -1,6 +1,6 @@
 name = "explorer"
 description = "Read-heavy discovery for locating relevant code, configuration, data, sources, and execution paths. Use when the parent needs evidence and scoped findings before analysis or implementation."
-model = "gpt-6.1-sol"
+model = "gpt-6.2-sol"
 model_reasoning_effort = "low"
 
 developer_instructions = """
